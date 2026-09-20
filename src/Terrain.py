@@ -21,7 +21,6 @@ TERRAINS = {}
 for t in [ROAD, GRASS, SAND, TRAP, WATER, WALL]:
     TERRAINS[t.name] = t
 
-
 def get_terrain(name: str) -> Terrain:
     """Возвращает объект типа Terrain по имени. Выдаёт ошибку, если Terrain с этим имени нет."""
     if name not in TERRAINS:
