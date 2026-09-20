@@ -11,10 +11,10 @@ class Terrain:
     passable: bool = True
 
 ROAD = Terrain("road", (255, 255, 255), 1.0)
-GRASS = Terrain("grass", (200, 230, 200), 1.5)
-SAND = Terrain("sand", (230, 210, 120), 2.0)
-TRAP = Terrain("trap", (100, 140, 80), 5.0)
-WATER = Terrain("water", (60, 110, 200), 10.0)
+GRASS = Terrain("grass", (170, 250, 170), 1.5)
+SAND = Terrain("sand", (245, 230, 165), 2.0)
+TRAP = Terrain("trap", (75, 75, 75), 5.0)
+WATER = Terrain("water", (65, 130, 240), 10.0)
 WALL = Terrain("wall", (0, 0, 0), float("inf"), passable=False)
 
 TERRAINS = {}
