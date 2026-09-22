@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from src.Terrain import Terrain, WALL
+from src.terrain import Terrain, WALL
 
 
 @dataclass
@@ -13,11 +13,6 @@ class Cell:
     terrain: Terrain = WALL
 
     #property Чтобы не писать () при вызове метода, берёт значение из self
-    @property
-    def is_wall(self) -> bool:
-        """ True, если клетка непроходима """
-        return not self.terrain.passable
-
     @property
     def cost(self) -> float:
         """ Стоимость прохода через эту клетку """
