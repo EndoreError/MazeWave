@@ -27,8 +27,6 @@ class Maze:
 
         # По умолчанию старт в левом верхнем углу, финиш — в правом нижнем.
         # Крайние клетки используем как стены, поэтому +1 и -2.
-        self.start: tuple[int, int] = (1, 1)
-        self.finish: tuple[int, int] = (height - 2, width - 2)
 
     def cell_at(self, row: int, col: int) -> Cell:
         """Возвращает клетку по координатам."""
@@ -40,15 +38,17 @@ class Maze:
         """Меняет тип местности у клетки."""
         self.cell_at(row, col).terrain = terrain
 
-    def neighbors(self, row: int, col: int):
+    def neighbors(self, row: int, col: int, step: int):
         """
         Возвращает 4 соседа (без диагоналей) — те, что внутри лабиринта.
         Это генератор, поэтому yield, а не return списка.
         """
-        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        neighborsPoints = []
+        for dr, dc in [(-step, 0), (step, 0), (0, -step), (0, step)]:
             nr, nc = row + dr, col + dc
             if 0 <= nr < self.height and 0 <= nc < self.width:
-                yield nr, nc
+                neighborsPoints.append((nr, nc))
+        return neighborsPoints
 
     def __repr__(self) -> str:
         return f"Maze({self.width}x{self.height})"
