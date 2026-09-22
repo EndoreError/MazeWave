@@ -22,10 +22,11 @@ class MazeGenerator:
         # Это ключ к воспроизводимости: один seed → одна карта всегда.
         self.rng = random.Random(seed)
         self.start: tuple[int, int] = (self.rng.randint(0, self.width - 1), self.rng.randint(0, self.height - 1))
-        self.finish: tuple[int, int]
+        self.finish: tuple[int, int] = self.start
 
-    def generatedfs(self) -> Maze:
-        """ Из объекта Maze генерирует другой объект Maze, заполненный лабиринтом """
+    def generateDFS(self) -> Maze:
+        """ Из объекта Maze генерирует другой объект Maze, заполненный лабиринтом,
+        выдаёт кортеж с лабиринтом точкой старта и финиша """
         maze = Maze(self.width, self.height)
         mazeBarrier = Maze(self.width * 2 + 1, self.height * 2 + 1)
 
@@ -50,6 +51,9 @@ class MazeGenerator:
                 wallPoint = (nowNeighbour[0] + stack[-1][0] + 1, nowNeighbour[1] + stack[-1][1] + 1)
                 mazeBarrier.set_terrain(wallPoint[0], wallPoint[1], ROAD)
                 stack.append(nowNeighbour)
-            else: stack.pop()
+            else:
+                if self.finish == self.start:
+                    self.finish = stack[-1]
+                stack.pop()
 
-        return mazeBarrier
+        return mazeBarrier, self.start, self.finish
