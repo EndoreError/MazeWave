@@ -1,23 +1,14 @@
 from src.maze_generator import MazeGenerator
-from src.terrain import WALL
-
-def print_maze(maze_to_print, start_point, finish_point) -> None:
-    """ Печатает лабиринт символами в консоль"""
-    for r in range(maze_to_print.height):
-        line = []
-        for c in range(maze_to_print.width):
-            if (r, c) == start_point:
-                line.append("S")
-            elif (r, c) == finish_point:
-                line.append("F")
-            elif maze_to_print.cell_at((r, c)).terrain == WALL:
-                line.append("#")
-            else:
-                line.append(" ")
-        print(" ".join(line))
-
+from src.terrain import WATER, GRASS
+from src.visualizer import Visualizer
 
 if __name__ == "__main__":
-    maze, start, finish = MazeGenerator(width=10, height=30, seed=98520864).generate_dfs()
-    print(f"Лабиринт {maze.width}x{maze.height}")
-    print_maze(maze, start, finish)
+    wall_maze, terrain_maze, start_point, finish_point = MazeGenerator(30, 30, 10293).generate_dfs()
+    terrain_maze.set_terrain((0, 1), WATER)
+    terrain_maze.set_terrain((2, 1), GRASS)
+    terrain_maze.set_terrain((5, 2), GRASS)
+    terrain_maze.set_terrain((6, 2), GRASS)
+    terrain_maze.set_terrain((12, 5), GRASS)
+    terrain_maze.set_terrain((12, 1), GRASS)
+    terrain_maze.set_terrain((22, 21), GRASS)
+    Visualizer(wall_maze, terrain_maze, start_point, finish_point).terrain_render()

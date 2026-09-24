@@ -30,16 +30,13 @@ class Maze:
         """ Меняет тип местности у клетки """
         self.cell_at(point).terrain = terrain
 
-    def neighbors(self, row: int, col: int, step: int):
-        """
-        Возвращает 4 соседа (без диагоналей) — те, что внутри лабиринта.
-        Это генератор, поэтому yield, а не return списка.
-        """
+    def neighbors(self, point: tuple[int, int], step: int):
+        """ Возвращает 4 соседа (без диагоналей) — те, что внутри лабиринта """
         neighbors_points = []
-        for dr, dc in [(-step, 0), (step, 0), (0, -step), (0, step)]:
-            nr, nc = row + dr, col + dc
-            if 0 <= nr < self.height and 0 <= nc < self.width:
-                neighbors_points.append((nr, nc))
+        for directional_row, directional_col in [(-step, 0), (step, 0), (0, -step), (0, step)]:
+            neighbor_row, neighbor_col = point[0] + directional_row, point[1] + directional_col
+            if 0 <= neighbor_row < self.height and 0 <= neighbor_col < self.width:
+                neighbors_points.append((neighbor_row, neighbor_col))
         return neighbors_points
 
     def __repr__(self) -> str:
