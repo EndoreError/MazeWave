@@ -2,8 +2,8 @@
 
 import random
 
+from src.terrain import *
 from src.maze import Maze
-from src.terrain import ROAD
 
 class MazeGenerator:
     """ Генерация лабиринта по seed """
@@ -18,7 +18,7 @@ class MazeGenerator:
         self.start: tuple[int, int] = (self.rng.randint(0, self.height - 1), self.rng.randint(0, self.width - 1))
         self.finish: tuple[int, int] = self.start
 
-    def generate_dfs(self) -> tuple[Maze, Maze, tuple[int, int], tuple[int, int]]:
+    def generate_maze_dfs(self) -> tuple[Maze, Maze, tuple[int, int], tuple[int, int]]:
         """
         Из объекта Maze генерирует другой объект Maze, заполненный лабиринтом,
         выдаёт кортеж с лабиринтом точкой старта и финиша
@@ -55,3 +55,14 @@ class MazeGenerator:
         physical_finish = (self.finish[0] * 2 + 1, self.finish[1] * 2 + 1)
 
         return wall_maze, terrain_maze, physical_start, physical_finish
+
+    def generate_terrain(self) -> Maze:
+        terrain_maze = Maze(self.width, self.height)
+        terrain_types = [ROAD, GRASS, SAND, WATER, TRAP]
+
+        for i in range(terrain_maze.height):
+            for j in range(terrain_maze.width):
+                terrain_maze.set_terrain((i, j), self.rng.choice(terrain_types))
+
+        terrain_maze.set_terrain(self.start, ROAD)
+        return terrain_maze

@@ -16,7 +16,7 @@ class Visualizer:
         self.finish_point = finish_point
 
         self.tile_size = 1
-        self.wall_linewidth = 4
+        self.wall_linewidth = 8
 
     def terrain_array_generator(self):
         terrain_array = []
@@ -44,9 +44,15 @@ class Visualizer:
         fig, ax = plt.subplots(figsize=(self.terrain_maze.width * self.tile_size, self.terrain_maze.height * self.tile_size))
 
         sr, sc = (self.start_point[0] - 1) // 2, (self.start_point[1] - 1) // 2
-        ax.plot(2 * sc + 1, 2 * sr + 1, 'o', color='#10ff10', markersize=30, zorder=3)
+        ax.plot(2 * sc + 1, 2 * sr + 1, 'o', color='#10ff10', markersize=30, zorder=5)
+        ax.plot(2 * sc + 1, 2 * sr + 1, 'o', color='#ffffff', markersize=35, zorder=4)
+        ax.plot(2 * sc + 1, 2 * sr + 1, 'o', color='#000000', markersize=40, zorder=3)
+
         fr, fc = (self.finish_point[0] - 1) // 2, (self.finish_point[1] - 1) // 2
-        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color='#ff0000', markersize=30, zorder=3)
+        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color='#ff0000', markersize=30, zorder=5)
+        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color='#ffffff', markersize=35, zorder=4)
+        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color='#000000', markersize=40, zorder=3)
+
         ax.imshow(self.terrain_array_generator(), extent=(0, 2 * self.terrain_maze.width, 2 * self.terrain_maze.height, 0), zorder=1)
         ax.add_collection(LineCollection(self.wall_array_generator(), colors=WALL.color, linewidths=self.wall_linewidth, zorder=2))
 

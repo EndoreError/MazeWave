@@ -1,7 +1,8 @@
 """ Лабиринт: сетка клеток + старт + финиш """
 
 from src.cell import Cell
-from src.terrain import WALL
+from src.terrain import WALL, Terrain
+
 
 class Maze:
     """ Сетка клеток с точками старта и финиша """
@@ -26,7 +27,7 @@ class Maze:
             raise IndexError(f"Координаты ({point[0]},{point[1]}) вне лабиринта")
         return self.grid[point[0]][point[1]]
 
-    def set_terrain(self, point: tuple[int, int], terrain):
+    def set_terrain(self, point: tuple[int, int], terrain: Terrain):
         """ Меняет тип местности у клетки """
         self.cell_at(point).terrain = terrain
 
