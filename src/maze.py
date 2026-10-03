@@ -40,5 +40,14 @@ class Maze:
                 neighbors_points.append((neighbor_row, neighbor_col))
         return neighbors_points
 
+    def x_neighbors(self, point: tuple[int, int], step: int) -> list[tuple[int, int]]:
+        """ Возвращает 4 соседа (по диагоналям) — те, что внутри лабиринта """
+        neighbors_points = []
+        for directional_row, directional_col in [(-step, step), (step, -step), (-step, -step), (step, step)]:
+            neighbor_row, neighbor_col = point[0] + directional_row, point[1] + directional_col
+            if 0 <= neighbor_row < self.height and 0 <= neighbor_col < self.width:
+                neighbors_points.append((neighbor_row, neighbor_col))
+        return neighbors_points
+
     def __repr__(self) -> str:
         return f"Maze({self.width}x{self.height})"
