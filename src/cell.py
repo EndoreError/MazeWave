@@ -11,6 +11,8 @@ class Cell:
     row: int
     col: int
     terrain: Terrain = WALL
+    height: float = 0.0
+    wet: float = 0.0
 
     #property Чтобы не писать () при вызове метода, берёт значение из self
     @property
