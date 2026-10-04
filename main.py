@@ -1,12 +1,17 @@
 import random
+from random import seed
 
 from src.maze_generator import MazeGenerator
 from src.visualizer import Visualizer
 
 if __name__ == "__main__": # Выполняется только если на прямую запускать именно эту программу
-    width, height, seed = tuple(map(int, input("width [пробел] height [пробел] seed(0 для случайного): ").split(" ")))
-    if seed == 0:
-        seed = random.randint(0,99999999)
+    width = 0
+    height = 0
+    seed = 0
+    while 3 > width or 100 < width or 3 > height or 100 < height:
+        width, height, seed = tuple(map(int, input("width [пробел] height [пробел] seed(0 для случайного): ").split(" ")))
+        if seed == 0:
+            seed = random.randint(0,99999999)
     wall_maze, terrain_maze, start_point, finish_point = MazeGenerator(width, height, seed).generate_maze_dfs()
     if input("0 - генерация ландшафта: ") == "0":
         terrain_maze = MazeGenerator(width, height, seed).generate_terrain()

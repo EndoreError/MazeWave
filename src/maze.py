@@ -3,7 +3,6 @@
 from src.cell import Cell
 from src.terrain import WALL, Terrain
 
-
 class Maze:
     """ Сетка клеток с точками старта и финиша """
 
@@ -32,7 +31,7 @@ class Maze:
         self.cell_at(point).terrain = terrain
 
     def neighbors(self, point: tuple[int, int], step: int):
-        """ Возвращает 4 соседа (без диагоналей) — те, что внутри лабиринта """
+        """ Возвращает 4 соседа (по вертикали и горизонтали) — те, что внутри лабиринта """
         neighbors_points = []
         for directional_row, directional_col in [(-step, 0), (step, 0), (0, -step), (0, step)]:
             neighbor_row, neighbor_col = point[0] + directional_row, point[1] + directional_col

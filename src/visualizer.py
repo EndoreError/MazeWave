@@ -3,10 +3,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.collections import LineCollection
+import os
 
 from src.maze import Maze
 from src.terrain import *
-
 
 class Visualizer:
     def __init__(self,wall_maze: Maze, terrain_maze: Maze, start_point, finish_point):
@@ -16,7 +16,7 @@ class Visualizer:
         self.finish_point = finish_point
 
         self.tile_size = 1
-        self.wall_linewidth = 8
+        self.wall_linewidth = 6
 
     def terrain_array_generator(self):
         terrain_array = []
@@ -58,4 +58,5 @@ class Visualizer:
 
         ax.axis('off')
         plt.tight_layout()
-        plt.show()
+        plt.savefig('maze_result.png', bbox_inches='tight')
+        os.system('start maze_result.png')
