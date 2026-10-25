@@ -8,8 +8,6 @@ class Maze:
 
     def __init__(self, width: int, height: int):
         """ Создаёт пустой лабиринт, полностью заполненный стенами """
-        if width < 3 or height < 3:
-            raise ValueError("Размер лабиринта должен быть не меньше 3x3")
 
         self.width = width
         self.height = height

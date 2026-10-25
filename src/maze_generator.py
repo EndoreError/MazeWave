@@ -4,6 +4,7 @@ import random
 
 from src.terrain import *
 from src.maze import Maze
+from src.config import generator_data
 
 class MazeGenerator:
     """ Генерация лабиринта по seed """
@@ -62,8 +63,12 @@ class MazeGenerator:
         physical_start = (self.start[0] * 2 + 1, self.start[1] * 2 + 1)
         physical_finish = self.rng.choice(finish_stack)
 
-        while abs(physical_start[0] - physical_finish[0]) <= wall_maze.height // 2 or abs(physical_start[1] - physical_finish[1]) <= wall_maze.width // 2:
+        n = 0
+        while abs(physical_start[0] - physical_finish[0]) <= wall_maze.height // 2 - 1 or abs(physical_start[1] - physical_finish[1]) <= wall_maze.width // 2 - 1:
             physical_finish = self.rng.choice(finish_stack)
+            if n > wall_maze.width + wall_maze.height:
+                break
+            n += 1
 
         return wall_maze, terrain_maze, physical_start, physical_finish
 
@@ -79,77 +84,59 @@ class MazeGenerator:
                 terrain_maze.cell_at((row, col)).height = self.rng.random()
                 terrain_maze.cell_at((row, col)).wet = self.rng.random()
 
-        # Сглаживание высоты
-        for n in range(8):
-            min_height = 1.0
-            max_height = 0.0
-            for row in range(terrain_maze.height):
-                for col in range(terrain_maze.width):
-                    av_height = 0
-                    neighbours_points = terrain_maze.neighbors((row, col), 1) + terrain_maze.x_neighbors((row, col), 1)
-                    for i in neighbours_points:
-                        av_height += terrain_maze.cell_at(i).height
-                    av_height /= len(neighbours_points)
-                    if min_height > av_height: min_height = av_height
-                    if max_height < av_height: max_height = av_height
-                    terrain_maze.cell_at((row, col)).height = av_height
-
-            for row in range(terrain_maze.height):
-                for col in range(terrain_maze.width):
-                    terrain_maze.cell_at((row, col)).height = (terrain_maze.cell_at((row, col)).height - min_height)/(max_height - min_height)
-
-        # Сглаживание влажности
-        for n in range(6):
-            min_wet = 1.0
-            max_wet = 0.0
-            for row in range(terrain_maze.height):
-                for col in range(terrain_maze.width):
-                    av_wet = 0
-                    neighbours_points = terrain_maze.neighbors((row, col), 1) + terrain_maze.x_neighbors((row, col), 1)
-                    for i in neighbours_points:
-                        av_wet += terrain_maze.cell_at(i).wet
-                    av_wet /= len(neighbours_points)
-                    if min_wet > av_wet: min_wet = av_wet
-                    if max_wet < av_wet: max_wet = av_wet
-                    terrain_maze.cell_at((row, col)).wet = av_wet
-
-            for row in range(terrain_maze.height):
-                for col in range(terrain_maze.width):
-                    terrain_maze.cell_at((row, col)).wet = (terrain_maze.cell_at((row, col)).wet - min_wet)/(max_wet - min_wet)
+        # Сглаживание высоты и влажности
+        self._smooth_field(terrain_maze, "height", generator_data.smooth_field_height_passes)
+        self._smooth_field(terrain_maze, "wet", generator_data.smooth_field_wet_passes)
 
         for row in range(terrain_maze.height):
             for col in range(terrain_maze.width):
                 wet = terrain_maze.cell_at((row, col)).wet
                 height = terrain_maze.cell_at((row, col)).height
 
-                # 1. Вода — приоритет над всем. Если тут мокро — тут вода,
-                #    даже если клетка высокая. Никаких гор посреди озера.
                 if wet > 0.70:
                     terrain_maze.set_terrain((row, col), WATER)
 
-                # 2. Горы — только в сухих и умеренно сухих зонах.
-                #    Двойное условие height+wet исключает горы во влажных регионах.
                 elif height > 0.75 and wet < 0.50:
                     terrain_maze.set_terrain((row, col), MOUNTAIN)
 
-                # 3. Сухие возвышенности — тоже горы
                 elif height > 0.65 and wet < 0.30:
                     terrain_maze.set_terrain((row, col), MOUNTAIN)
 
-                # 4. Пляж — полоса между водой и остальным ландшафтом
                 elif wet > 0.60:
                     terrain_maze.set_terrain((row, col), SAND)
 
-                # 5. Сухие низины — пустыня
                 elif wet < 0.30:
                     terrain_maze.set_terrain((row, col), SAND)
 
-                # 6. Озёра в низинах при средней влажности
                 elif height < 0.25 and wet > 0.60:
                     terrain_maze.set_terrain((row, col), WATER)
 
-                # 7. Всё остальное — трава
                 else:
                     terrain_maze.set_terrain((row, col), GRASS)
 
         return terrain_maze
+
+    @staticmethod
+    def _smooth_field(maze: Maze, field: str, passes: int):
+        """ Сглаживание поля (height или wet) с нормализацией после каждого прохода. """
+        for _ in range(passes):
+            min_v, max_v = 1.0, 0.0
+            for row in range(maze.height):
+                for col in range(maze.width):
+                    av = 0
+                    neighbours_points = (maze.neighbors((row, col), 1) + maze.x_neighbors((row, col), 1))
+
+                    for i in neighbours_points:
+                        av += getattr(maze.cell_at(i), field)
+                    av /= len(neighbours_points)
+
+                    if min_v > av: min_v = av
+                    if max_v < av: max_v = av
+
+                    setattr(maze.cell_at((row, col)), field, av)
+
+            for row in range(maze.height):
+                for col in range(maze.width):
+                    cell = maze.cell_at((row, col))
+
+                    setattr(cell, field,(getattr(cell, field) - min_v) / (max_v - min_v))

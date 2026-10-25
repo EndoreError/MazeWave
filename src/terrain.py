@@ -1,20 +1,22 @@
 """ Типы местности и их свойства """
 
 from dataclasses import dataclass
+from src.config import terrain_data as data
 
 @dataclass(frozen=True)
 class Terrain:
     name: str
     color: tuple[float, float, float]
     cost: float
+    passable: bool
     in_print: str = "0"
 
-ROAD = Terrain("road", (250/255.0, 250/255.0, 250/255.0), 1.0, ".")
-GRASS = Terrain("grass", (200/255.0, 250/255.0, 200/255.0), 1.5, "g")
-SAND = Terrain("sand", (245/255.0, 230/255.0, 165/255.0), 2.0, "s")
-MOUNTAIN = Terrain("mountain", (200/255.0, 200/255.0, 200/255.0), 5.0, "t")
-WATER = Terrain("water", (150/255.0, 200/255.0, 240/255.0), 10.0, "w")
-WALL = Terrain("wall", (0/255.0, 0/255.0, 0/255.0), float("inf"), "#")
+ROAD = Terrain(data.road_name, data.road_color, data.road_cost, data.road_passible, data.road_in_print)
+GRASS = Terrain(data.grass_name, data.grass_color, data.grass_cost, data.grass_passible, data.grass_in_print)
+SAND = Terrain(data.sand_name, data.sand_color, data.sand_cost, data.sand_passible, data.sand_in_print)
+MOUNTAIN = Terrain(data.mountain_name, data.mountain_color, data.mountain_cost, data.mountain_passible, data.mountain_in_print)
+WATER = Terrain(data.water_name, data.water_color, data.water_cost, data.water_passible, data.water_in_print)
+WALL = Terrain(data.wall_name, data.wall_color, data.wall_cost, data.wall_passible, data.wall_in_print)
 
 TERRAINS = {}
 for t in [ROAD, GRASS, SAND, MOUNTAIN, WATER, WALL]:

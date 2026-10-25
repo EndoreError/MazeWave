@@ -7,6 +7,7 @@ import os
 
 from src.maze import Maze
 from src.terrain import *
+from src.config import visualizer_data
 
 class Visualizer:
     def __init__(self,wall_maze: Maze, terrain_maze: Maze, start_point, finish_point):
@@ -15,8 +16,8 @@ class Visualizer:
         self.start_point = start_point
         self.finish_point = finish_point
 
-        self.tile_size = 1
-        self.wall_linewidth = 6
+        self.tile_size = visualizer_data.tile_size
+        self.wall_linewidth = visualizer_data.wall_linewidth
 
     def terrain_array_generator(self):
         terrain_array = []
@@ -44,14 +45,14 @@ class Visualizer:
         fig, ax = plt.subplots(figsize=(self.terrain_maze.width * self.tile_size, self.terrain_maze.height * self.tile_size))
 
         sr, sc = (self.start_point[0] - 1) // 2, (self.start_point[1] - 1) // 2
-        ax.plot(2 * sc + 1, 2 * sr + 1, 'o', color='#10ff10', markersize=30, zorder=5)
-        ax.plot(2 * sc + 1, 2 * sr + 1, 'o', color='#ffffff', markersize=35, zorder=4)
-        ax.plot(2 * sc + 1, 2 * sr + 1, 'o', color='#000000', markersize=40, zorder=3)
+        ax.plot(2 * sc + 1, 2 * sr + 1, 'o', color=visualizer_data.start_color[0], markersize=visualizer_data.marker_size, zorder=5)
+        ax.plot(2 * sc + 1, 2 * sr + 1, 'o', color=visualizer_data.start_color[1], markersize=visualizer_data.marker_size + 5, zorder=4)
+        ax.plot(2 * sc + 1, 2 * sr + 1, 'o', color=visualizer_data.start_color[2], markersize=visualizer_data.marker_size + 10, zorder=3)
 
         fr, fc = (self.finish_point[0] - 1) // 2, (self.finish_point[1] - 1) // 2
-        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color='#ff0000', markersize=30, zorder=5)
-        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color='#ffffff', markersize=35, zorder=4)
-        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color='#000000', markersize=40, zorder=3)
+        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color=visualizer_data.finish_color[0], markersize=visualizer_data.marker_size, zorder=5)
+        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color=visualizer_data.finish_color[0], markersize=visualizer_data.marker_size + 5, zorder=4)
+        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color=visualizer_data.finish_color[0], markersize=visualizer_data.marker_size + 10, zorder=3)
 
         ax.imshow(self.terrain_array_generator(), extent=(0, 2 * self.terrain_maze.width, 2 * self.terrain_maze.height, 0), zorder=1)
         ax.add_collection(LineCollection(self.wall_array_generator(), colors=WALL.color, linewidths=self.wall_linewidth, zorder=2))
@@ -59,4 +60,4 @@ class Visualizer:
         ax.axis('off')
         plt.tight_layout()
         plt.savefig('maze_result.png', bbox_inches='tight')
-        os.system('start maze_result.png')
+        os.startfile('maze_result.png')
