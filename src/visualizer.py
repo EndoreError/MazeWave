@@ -40,8 +40,7 @@ class Visualizer:
                     wall_array.append([(x, y), (x, y + 1)])
         return wall_array
 
-
-    def render(self):
+    def render(self, path=None):
         fig, ax = plt.subplots(figsize=(self.terrain_maze.width * self.tile_size, self.terrain_maze.height * self.tile_size))
 
         sr, sc = (self.start_point[0] - 1) // 2, (self.start_point[1] - 1) // 2
@@ -51,11 +50,16 @@ class Visualizer:
 
         fr, fc = (self.finish_point[0] - 1) // 2, (self.finish_point[1] - 1) // 2
         ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color=visualizer_data.finish_color[0], markersize=visualizer_data.marker_size, zorder=5)
-        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color=visualizer_data.finish_color[0], markersize=visualizer_data.marker_size + 5, zorder=4)
-        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color=visualizer_data.finish_color[0], markersize=visualizer_data.marker_size + 10, zorder=3)
+        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color=visualizer_data.finish_color[1], markersize=visualizer_data.marker_size + 5, zorder=4)
+        ax.plot(2 * fc + 1, 2 * fr + 1, 'o', color=visualizer_data.finish_color[2], markersize=visualizer_data.marker_size + 10, zorder=3)
 
         ax.imshow(self.terrain_array_generator(), extent=(0, 2 * self.terrain_maze.width, 2 * self.terrain_maze.height, 0), zorder=1)
         ax.add_collection(LineCollection(self.wall_array_generator(), colors=WALL.color, linewidths=self.wall_linewidth, zorder=2))
+
+        if path:
+            xs = [2 * col + 1 for row, col in path]
+            ys = [2 * row + 1 for row, col in path]
+            ax.plot(xs, ys, '-', color='#aa00aa', linewidth=8, zorder=4)
 
         ax.axis('off')
         plt.tight_layout()

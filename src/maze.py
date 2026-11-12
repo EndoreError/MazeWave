@@ -24,11 +24,11 @@ class Maze:
             raise IndexError(f"Координаты ({point[0]},{point[1]}) вне лабиринта")
         return self.grid[point[0]][point[1]]
 
-    def set_terrain(self, point: tuple[int, int], terrain: Terrain):
+    def set_terrain(self, point: tuple[int, int], terrain: Terrain) -> None:
         """ Меняет тип местности у клетки """
         self.cell_at(point).terrain = terrain
 
-    def neighbors(self, point: tuple[int, int], step: int):
+    def neighbors(self, point: tuple[int, int], step: int) -> list[tuple[int, int]]:
         """ Возвращает 4 соседа (по вертикали и горизонтали) — те, что внутри лабиринта """
         neighbors_points = []
         for directional_row, directional_col in [(-step, 0), (step, 0), (0, -step), (0, step)]:

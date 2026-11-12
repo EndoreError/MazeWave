@@ -1,8 +1,5 @@
 from dataclasses import dataclass
 
-from src import visualizer
-
-
 @dataclass
 class TerrainData:
     road_name: str = "road"
