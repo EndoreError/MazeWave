@@ -46,6 +46,8 @@ class GeneratorData:
     max_maze_size: int = 100
     min_maze_size: int = 3
 
+    break_chance: float = 0.50
+
 @dataclass
 class VisualizerData:
     tile_size: int = 1

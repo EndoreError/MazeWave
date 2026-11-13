@@ -140,3 +140,27 @@ class MazeGenerator:
                     cell = maze.cell_at((row, col))
 
                     setattr(cell, field,(getattr(cell, field) - min_v) / (max_v - min_v))
+
+    def add_cycles(self, wall_maze: Maze) -> None:
+        """ Ломает стены только в тупиках, чтобы создать петли """
+        for row in range(1, wall_maze.height - 1):
+            for col in range(1, wall_maze.width - 1):
+
+                if wall_maze.cell_at((row, col)).terrain == WALL:
+                    continue
+
+                walls_around = []
+                for neighbor in wall_maze.neighbors((row, col), 1):
+                    if wall_maze.cell_at(neighbor).terrain == WALL:
+                        walls_around.append(neighbor)
+
+                if len(walls_around) == 3:
+                    if self.rng.random() < generator_data.break_chance:
+                        wall_r, wall_c = self.rng.choice(walls_around)
+
+                        next_r = 2 * wall_r - row
+                        next_c = 2 * wall_c - col
+
+                        if 0 <= next_r < wall_maze.height and 0 <= next_c < wall_maze.width:
+                            if wall_maze.cell_at((next_r, next_c)).terrain != WALL:
+                                wall_maze.set_terrain((wall_r, wall_c), ROAD)

@@ -20,6 +20,9 @@ if __name__ == "__main__":  # Выполняется только если на 
     if input("0 - генерация ландшафта: ") == "0":
         terrain_maze = gen.generate_terrain()
 
+    if input("0 - генерация циклов: ") == "0":
+        gen.add_cycles(wall_maze)
+
     l_start = ((start_point[0] - 1) // 2, (start_point[1] - 1) // 2)
     l_finish = ((finish_point[0] - 1) // 2, (finish_point[1] - 1) // 2)
 
