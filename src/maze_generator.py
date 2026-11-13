@@ -141,12 +141,12 @@ class MazeGenerator:
 
                     setattr(cell, field,(getattr(cell, field) - min_v) / (max_v - min_v))
 
-    def add_cycles(self, wall_maze: Maze) -> None:
+    def add_cycles(self, wall_maze: Maze, finish: tuple[int, int]) -> None:
         """ Ломает стены только в тупиках, чтобы создать петли """
         for row in range(1, wall_maze.height - 1):
             for col in range(1, wall_maze.width - 1):
 
-                if wall_maze.cell_at((row, col)).terrain == WALL:
+                if wall_maze.cell_at((row, col)).terrain == WALL or (row, col) == finish:
                     continue
 
                 walls_around = []

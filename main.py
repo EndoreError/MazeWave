@@ -3,25 +3,44 @@ import random
 from src.maze_generator import MazeGenerator
 from src.visualizer import Visualizer
 from src.pathfinder import Pathfinder
+from src.config import generator_data
 
-if __name__ == "__main__":  # Выполняется только если на прямую запускать именно эту программу
+if __name__ == "__main__":
     width = 0
     height = 0
     seed = 0
-    while 3 > width or 100 < width or 3 > height or 100 < height:
-        width, height, seed = tuple(map(int, input("width [пробел] height [пробел] seed(0 для случайного): ").split(" ")))
-        if seed == 0:
-            seed = random.randint(0, 999999999)
+
+    while True:
+        try:
+            user_input = input("width [пробел] height [пробел] seed(0 для случайного): ").split()
+
+            if len(user_input) != 3:
+                print("Ошибка: нужно ввести ровно 3 числа через пробел.")
+                continue
+
+            width, height, seed = map(int, user_input)
+
+            if not (generator_data.min_maze_size <= width <= generator_data.max_maze_size and
+                    generator_data.min_maze_size <= height <= generator_data.max_maze_size):
+                print(
+                    f"Ошибка: размеры должны быть от {generator_data.min_maze_size} до {generator_data.max_maze_size}.")
+                continue
+            break
+
+        except ValueError:
+            print("Ошибка: вводите только целые числа.")
+
+    if seed == 0:
+        seed = random.randint(0, 999999999)
 
     gen = MazeGenerator(width, height, seed)
-
     wall_maze, terrain_maze, start_point, finish_point = gen.generate_maze_dfs()
 
-    if input("0 - генерация ландшафта: ") == "0":
+    if input("0 - генерация ландшафта (любой другой символ - пропустить): ") == "0":
         terrain_maze = gen.generate_terrain()
 
-    if input("0 - генерация циклов: ") == "0":
-        gen.add_cycles(wall_maze)
+    if input("0 - генерация циклов (любой другой символ - пропустить): ") == "0":
+        gen.add_cycles(wall_maze, finish_point)
 
     l_start = ((start_point[0] - 1) // 2, (start_point[1] - 1) // 2)
     l_finish = ((finish_point[0] - 1) // 2, (finish_point[1] - 1) // 2)

@@ -46,7 +46,7 @@ class GeneratorData:
     max_maze_size: int = 100
     min_maze_size: int = 3
 
-    break_chance: float = 0.50
+    break_chance: float = 0.60
 
 @dataclass
 class VisualizerData:
@@ -56,6 +56,6 @@ class VisualizerData:
     finish_color: tuple[str, str, str] = ('#ff0000', '#ffffff', '#000000')
     marker_size: int = 30
 
-terrain_data = TerrainData
-generator_data = GeneratorData
-visualizer_data = VisualizerData
+terrain_data = TerrainData()
+generator_data = GeneratorData()
+visualizer_data = VisualizerData()
